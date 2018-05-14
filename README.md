@@ -1,5 +1,5 @@
 # sails-run-repl
-A better repl for Sails.js
+A better repl for Sails.js.  This is alpha software, but already has some useful features.
 
 ## Features
 
