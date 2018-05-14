@@ -11,54 +11,6 @@ const rl = readline.createInterface({
 
 const vm = require('vm');
 
-/*
- * Given a possibly incomplete line of code that may or may not contain nested tokens,
- * returns a list of unclosed tokens.  Nesting tokens include:
- *   - {}
- *   - ()
- *   - []
- *   - ""
- *   - ''
- *   - ``
- *
- * @param {string} slice of line
- *
- * @returns {Array} a list of unclosed tokens.
- * @throws {TokenError} thrown when tokens are not properly nested.
- */
-function unclosedTokens(fragment) {
-  const tokenPairs = ['{}', '[]', '()', "''", '""', '``'];
-  const tokenList = [];
-
-  for (let i = 0; i < fragment.length; i++) {
-    const lastPair = tokenList[tokenList.length - 1];
-    
-    // if this is the closing token, then remove the openner from the list
-    if (lastPair && lastPair[1] === fragment[i]) {
-      tokenList.pop();
-      continue;
-    }
-
-    // Find the first openning token
-    const pair = tokenPairs.find((j) => j[0] === fragment[i]);
-
-    // If this is an opening token, send it down for processing
-    if (pair) {
-      // don't require matches for anything besides {} inside template strings
-      if (lastPair === '``' && pair !== '{}') {
-        continue;
-      }
-
-      // don't require matches for anything inside quotes
-      if (lastPair === '""' && lastPair === "''") {
-        continue;
-      }
-
-      tokenList.push(pair);
-    }
-  }
-  return tokenList.map((i) => i[0]);
-}
 
 function println(text) {
   process.stdout.write(`${text}\n`);
@@ -69,7 +21,6 @@ module.exports = {
   description: 'Like the sails console, but cooler and more usable',
   inputs: {
   },
-
 
   fn: async function(inputs, exits) {
     function evaluator(cmd) {
